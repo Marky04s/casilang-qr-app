@@ -30,7 +30,8 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          Forgot login password?</a>
+          Forgot login password?
+        </a>
       </div>
 
       <v-text-field
@@ -44,17 +45,17 @@
       ></v-text-field>
 
       <v-card
-        class="mb-12"
+        class="mb-6"
         color="surface-variant"
         variant="tonal"
       >
         <v-card-text class="text-medium-emphasis text-caption">
-          Warning: After 3 consecutive failed login attempts, you account will be temporarily locked for three hours. If you must login now, you can also click "Forgot login password?" below to reset the login password.
+          Tip: You can also sign in using your Google account below.
         </v-card-text>
       </v-card>
 
       <v-btn
-        class="mb-8"
+        class="mb-4"
         color="blue"
         size="large"
         variant="tonal"
@@ -63,7 +64,30 @@
         Log In
       </v-btn>
 
-      <v-card-text class="text-center">
+      <v-divider class="my-4"></v-divider>
+
+      <!-- ✅ Google Sign-In Button -->
+      <v-btn
+        color="white"
+        variant="outlined"
+        block
+        size="large"
+        height="45"
+        class="px-4"
+        style="display: flex; justify-content: center; align-items: center;"
+        @click="handleGoogleSignIn"
+      >
+        <img
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+          alt="Google"
+          width="20"
+          height="20"
+          style="margin-right: 10px;"
+        />
+        <span style="color: #000; font-size: 14px;">Sign in with Google</span>
+      </v-btn>
+
+      <v-card-text class="text-center mt-6">
         <a
           class="text-blue text-decoration-none"
           href="#"
@@ -76,14 +100,34 @@
     </v-card>
   </div>
 </template>
-<script setup>
-  import { ref } from 'vue'
 
-  const visible = ref(false)
+<script setup>
+import { ref } from 'vue'
+import { signInWithPopup, auth, provider } from '@/plugins/firebase'
+
+const visible = ref(false)
+
+const handleGoogleSignIn = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider)
+    const user = result.user
+
+    console.log('✅ Google Sign-In Successful:', user)
+    console.log('Name:', user.displayName)
+    console.log('Email:', user.email)
+
+    // OPTIONAL: Redirect after sign-in
+    // window.location.href = '/dashboard' or use router.push()
+
+  } catch (error) {
+    console.error('❌ Google Sign-In Failed:', error)
+    alert("Google Sign-In failed: " + error.message)
+  }
+}
 </script>
 
 <script>
 export default {
-    layout: "auth",
+  layout: "auth",
 }
- </script>
+</script>
